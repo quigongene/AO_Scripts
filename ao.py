@@ -79,6 +79,6 @@ def ao_tea_keys():
 
 request = generate_ao_token(1234, 'username', 'pass')
 public, private = ao_tea_keys()
-encrypted = tea.encipher(request, private)
+encrypted = tea.encrypt(request, private)
 
 print("{public_key}-{message}".format(public_key=public, message=encrypted))
