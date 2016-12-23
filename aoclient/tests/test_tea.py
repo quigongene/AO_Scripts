@@ -5,6 +5,14 @@ from aoclient import tea
 
 
 class TEATests(unittest.TestCase):
+    def test_vectorization(self):
+        message = '0123456789abcdef'
+
+        vec = tea._str2vec(message)
+        str = tea._vec2str(vec)
+
+        self.assertEquals(message, str)
+
     def test_encryption(self):
         message = 'thisis16char'
         key = 'blahblahblahblah'

@@ -1,7 +1,24 @@
 # coding: utf-8
+"""
+Implementation of the Tiny Encryption Algorithm (TEA) for Python
+https://en.wikipedia.org/wiki/Tiny_Encryption_Algorithm
 
+Example Usage:
+
+from aoclient import tea
+
+# The key must be 16 characters
+key = '0123456789abcdef'
+message = 'Sample message for encryption and decryption.'
+
+cipher = tea.encrypt(message, key)
+
+
+assert message == tea.decrypt(cipher, key)
+
+"""
 import base64
-from ctypes import *
+import ctypes
 
 from . import utils
 
@@ -9,7 +26,7 @@ from . import utils
 def encrypt(plaintext, key):
     """
     :param plaintext:
-        The message to encode.  *Must* be a utf8 string and have a length which is a multiple of 8.
+        The message to encode.  *Must* be a utf8 string but can have any length.
 
     :param key:
         The encryption key used to encode the plaintext message.  *Must* be a utf8 string and 16 characters long.
@@ -51,9 +68,17 @@ def decrypt(ciphertext, key):
 
 
 def _encipher(v, k):
-    y, z = [c_uint32(x)
+    """
+    :param v:
+        A vector representing the information to be enciphered.  *Must* have a length of 2.
+    :param k:
+        A vector representing the encryption key.  *Must* have a length of 4.
+    :return:
+        A length-2 vector representing the encrypted information v.
+    """
+    y, z = [ctypes.c_uint32(x)
             for x in v]
-    sum = c_uint32(0)
+    sum = ctypes.c_uint32(0)
     delta = 0x9E3779B9
 
     for n in range(32, 0, -1):
@@ -65,9 +90,17 @@ def _encipher(v, k):
 
 
 def _decipher(v, k):
-    y, z = [c_uint32(x)
+    """
+    :param v:
+        A vector representing the information to be deciphered.  *Must* have a length of 2.
+    :param k:
+        A vector representing the encryption key.  *Must* have a length of 4.
+    :return:
+        The original message.
+    """
+    y, z = [ctypes.c_uint32(x)
             for x in v]
-    sum = c_uint32(0xC6EF3720)
+    sum = ctypes.c_uint32(0xC6EF3720)
     delta = 0x9E3779B9
 
     for n in range(32, 0, -1):
